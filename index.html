@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Promised Land | American Cultural & Political Legacy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0B132B',
+                            900: '#070A17',
+                            950: '#03050C'
+                        },
+                        crimson: {
+                            600: '#DC2626',
+                            700: '#B91C1C',
+                            800: '#991B1B'
+                        },
+                        gold: {
+                            400: '#FBBF24',
+                            500: '#F59E0B',
+                            600: '#D97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(217, 119, 6, 0.5);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(217, 119, 6, 0.8);
+        }
+        .glass-panel {
+            background: rgba(11, 19, 43, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF 20%, #FBBF24 70%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .flag-stripes {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(220, 38, 38, 0.15),
+                rgba(220, 38, 38, 0.15) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+    </style>
+</head>
+<body class="bg-navy-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-crimson-600 selection:text-white" x-data="appData()">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand / Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" @click="activeTab = 'hero'">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-crimson-600 to-navy-900 border border-gold-500/40 flex items-center justify-center shadow-lg shadow-crimson-900/30">
+                        <i data-lucide="flag" class="w-5 h-5 text-gold-400"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-wider uppercase gold-gradient-text">No Promised Land</span>
+                        <span class="block text-xs font-semibold tracking-widest text-slate-400 uppercase">United States Archive & Citadel</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden xl:flex items-center space-x-1">
+                    <template x-for="tab in tabs" :key="tab.id">
+                        <button 
+                            @click="activeTab = tab.id"
+                            :class="activeTab === tab.id ? 'bg-crimson-700/80 text-white shadow-md border-gold-500/50' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white border-transparent'"
+                            class="px-3.5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 border flex items-center space-x-2">
+                            <i :data-lucide="tab.icon" class="w-4 h-4"></i>
+                            <span x-text="tab.name"></span>
+                        </button>
+                    </template>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="xl:hidden flex items-center">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none">
+                        <i :data-lucide="mobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div x-show="mobileMenuOpen" x-collapse class="xl:hidden border-t border-slate-800 bg-navy-900/95 px-4 pt-2 pb-4 space-y-1">
+            <template x-for="tab in tabs" :key="tab.id">
+                <button 
+                    @click="activeTab = tab.id; mobileMenuOpen = false"
+                    :class="activeTab === tab.id ? 'bg-crimson-700 text-white' : 'text-slate-300 hover:bg-slate-800'"
+                    class="w-full text-left px-4 py-3 rounded-md text-sm font-semibold flex items-center space-x-3">
+                    <i :data-lucide="tab.icon" class="w-5 h-5 text-gold-400"></i>
+                    <span x-text="tab.name"></span>
+                </button>
+            </template>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Container -->
+    <main class="flex-grow">
+        
+        <!-- HERO / HOME SECTION -->
+        <section x-show="activeTab === 'hero'" class="relative min-h-[calc(100vh-5rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden flag-stripes">
+            <!-- Background Radial Glows -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-crimson-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-10 right-10 w-[400px] h-[400px] bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-5xl mx-auto text-center relative z-10 space-y-8">
+                <!-- Slogan Highlight Box -->
+                <div class="inline-block p-1 rounded-2xl bg-gradient-to-r from-crimson-600 via-gold-500 to-navy-800 shadow-2xl">
+                    <div class="bg-navy-950/90 rounded-xl p-6 sm:p-10 border border-gold-500/20 backdrop-blur-md">
+                        <div class="flex justify-center mb-4">
+                            <span class="px-3 py-1 text-xs font-extrabold tracking-widest text-gold-400 uppercase bg-gold-500/10 rounded-full border border-gold-500/30">
+                                Official Creed & Democratic Philosophy
+                            </span>
+                        </div>
+                        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white mb-6 font-serif italic">
+                            "America is the land of Democrats. The person who travels all over the world and makes themselves free from conflicts is a Democrat; their comeback desire and love to be American is what defines a Democrat."
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto font-light leading-relaxed">
+                            A nation born not merely from soil, but from an immortal idea of liberty, self-governance, global diplomacy, and the relentless pursuit of freedom across 250 years of trial and triumphant evolution.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Democratic Vision Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                    <div @click="activeTab = 'history'" class="glass-panel p-6 rounded-xl hover:border-gold-500/50 transition duration-300 cursor-pointer text-left group">
+                        <div class="w-12 h-12 rounded-lg bg-crimson-600/20 text-crimson-500 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="landmark" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-gold-400 transition">250 Years of Liberty</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">From 1619 slavery and colonial tyranny to emancipation, Civil Rights, and present Democratic leadership.</p>
+                    </div>
+
+                    <div @click="activeTab = 'military'" class="glass-panel p-6 rounded-xl hover:border-gold-500/50 transition duration-300 cursor-pointer text-left group">
+                        <div class="w-12 h-12 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-gold-400 transition">Atomic & Military Might</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Nuclear Triad, global carrier strike groups, stealth arsenal, and standing against authoritarian regimes.</p>
+                    </div>
+
+                    <div @click="activeTab = 'diplomats'" class="glass-panel p-6 rounded-xl hover:border-gold-500/50 transition duration-300 cursor-pointer text-left group">
+                        <div class="w-12 h-12 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-gold-400 transition">Top 100 U.S. Diplomats</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Explore the architects of American peace, peacekeepers, and negotiators shaping international order.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Ticker -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 text-center">
+                    <div class="bg-navy-900/80 p-4 rounded-lg border border-slate-800">
+                        <div class="text-2xl font-black text-gold-400">335M+</div>
+                        <div class="text-xs text-slate-400 uppercase font-semibold">Population</div>
+                    </div>
+                    <div class="bg-navy-900/80 p-4 rounded-lg border border-slate-800">
+                        <div class="text-2xl font-black text-gold-400">$27.9T+</div>
+                        <div class="text-xs text-slate-400 uppercase font-semibold">GDP Engine</div>
+                    </div>
+                    <div class="bg-navy-900/80 p-4 rounded-lg border border-slate-800">
+                        <div class="text-2xl font-black text-gold-400">11</div>
+                        <div class="text-xs text-slate-400 uppercase font-semibold">Supercarrier Fleets</div>
+                    </div>
+                    <div class="bg-navy-900/80 p-4 rounded-lg border border-slate-800">
+                        <div class="text-2xl font-black text-gold-400">46</div>
+                        <div class="text-xs text-slate-400 uppercase font-semibold">U.S. Presidents</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 1: SOCIO-POLITICAL & HISTORICAL EVOLUTION -->
+        <section x-show="activeTab === 'history'" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+            <!-- Header -->
+            <div class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-crimson-600">Sociology & Political Evolution</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">250 Years of Slavery to Global Freedom</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-3xl">
+                    From British colonial oppression, 250 years of slavery, emancipatory warfare, and Civil Rights battles to the modern Democratic republic led by transformative leaders like Barack Obama.
+                </p>
+            </div>
+
+            <!-- Historical Timeline -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-gold-400 flex items-center space-x-2">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                    <span>Key Eras of American Struggle & Triumph</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="era in timelineEras" :key="era.year">
+                        <div class="glass-panel p-6 rounded-xl border-l-4 border-l-crimson-600 hover:border-l-gold-500 transition">
+                            <div class="text-xs font-black text-gold-400 uppercase tracking-widest" x-text="era.year"></div>
+                            <h4 class="text-lg font-bold text-white mt-1" x-text="era.title"></h4>
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed" x-text="era.desc"></p>
+                            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                                <span>Impact:</span>
+                                <span class="font-semibold text-slate-200" x-text="era.impact"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Presidential Explorer & Focus on Barack Obama & Democratic Presidents -->
+            <div class="space-y-6 pt-8 border-t border-slate-800">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white">Presidential History Explorer</h3>
+                        <p class="text-xs text-slate-400">Detailed breakdown of key U.S. Presidents shaping American democracy.</p>
+                    </div>
+                    
+                    <!-- Filter Buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button @click="presidentFilter = 'all'" :class="presidentFilter === 'all' ? 'bg-gold-500 text-navy-950 font-bold' : 'bg-slate-800 text-slate-300'" class="px-3 py-1.5 rounded-lg text-xs transition">All Key Leaders</button>
+                        <button @click="presidentFilter = 'Democrat'" :class="presidentFilter === 'Democrat' ? 'bg-blue-600 text-white font-bold' : 'bg-slate-800 text-slate-300'" class="px-3 py-1.5 rounded-lg text-xs transition">Democrats</button>
+                        <button @click="presidentFilter = 'Republican'" :class="presidentFilter === 'Republican' ? 'bg-crimson-700 text-white font-bold' : 'bg-slate-800 text-slate-300'" class="px-3 py-1.5 rounded-lg text-xs transition">Republicans / Others</button>
+                    </div>
+                </div>
+
+                <!-- Obama Spotlight Banner -->
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl border-2 border-gold-500/30 bg-gradient-to-r from-navy-900 via-navy-800 to-blue-950/40 relative overflow-hidden">
+                    <div class="flex flex-col lg:flex-row items-center gap-8 relative z-10">
+                        <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-tr from-blue-600 to-gold-400 p-1 flex-shrink-0 shadow-xl">
+                            <div class="w-full h-full rounded-full bg-navy-950 flex items-center justify-center overflow-hidden">
+                                <i data-lucide="user-check" class="w-16 h-16 text-gold-400"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-center lg:text-left">
+                            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-blue-600/20 border border-blue-500/30 rounded-full text-blue-400 text-xs font-bold">
+                                <span>44th President of the United States</span>
+                                <span>•</span>
+                                <span>Democrat</span>
+                            </div>
+                            <h3 class="text-2xl sm:text-3xl font-black text-white">Barack Obama</h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
+                                Embodiment of the American Democratic Promise. Championed the Affordable Care Act (Obamacare), authorized the bin Laden mission, navigated the 2008 Financial Crisis recovery, spearheaded the Paris Climate Accord, and normalized diplomatic relations with Cuba.
+                            </p>
+                            <div class="flex flex-wrap gap-2 justify-center lg:justify-start text-xs text-gold-400 font-semibold pt-1">
+                                <span class="bg-navy-950/80 px-2.5 py-1 rounded border border-gold-500/20">Nobel Peace Prize Laureate</span>
+                                <span class="bg-navy-950/80 px-2.5 py-1 rounded border border-gold-500/20">Paris Climate Accord</span>
+                                <span class="bg-navy-950/80 px-2.5 py-1 rounded border border-gold-500/20">Affordable Care Act</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Presidents Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="pres in filteredPresidents" :key="pres.name">
+                        <div class="glass-panel p-5 rounded-xl space-y-3 hover:border-slate-700 transition">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gold-400" x-text="pres.num"></span>
+                                <span :class="pres.party === 'Democrat' ? 'bg-blue-600/20 text-blue-400 border-blue-500/30' : 'bg-crimson-600/20 text-crimson-400 border-crimson-500/30'" class="px-2.5 py-0.5 rounded text-xs font-semibold border" x-text="pres.party"></span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white" x-text="pres.name"></h4>
+                            <p class="text-xs text-slate-300 leading-relaxed" x-text="pres.legacy"></p>
+                            <div class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+                                <strong>Key Achievement:</strong> <span x-text="pres.achievement"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: GEOGRAPHY, SEAS & RIVERS -->
+        <section x-show="activeTab === 'geography'" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+            <div class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-gold-500">Geographic Advantage</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Seas, Rivers & Fortress America</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-3xl">
+                    Protected by two massive oceans and fueled by unmatched internal navigable river networks, America's geography provides inherent economic dominance and security.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Interactive Geographic Feature Cards -->
+                <template x-for="geo in geographyItems" :key="geo.title">
+                    <div class="glass-panel p-6 rounded-2xl space-y-4 hover:border-gold-500/40 transition">
+                        <div class="flex items-center justify-between">
+                            <div class="w-12 h-12 rounded-lg bg-navy-900 border border-gold-500/30 flex items-center justify-center text-gold-400">
+                                <i :data-lucide="geo.icon" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" x-text="geo.category"></span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white" x-text="geo.title"></h3>
+                        <p class="text-xs text-slate-300 leading-relaxed" x-text="geo.desc"></p>
+                        <div class="bg-navy-950/60 p-3 rounded-lg border border-slate-800 space-y-1">
+                            <div class="text-xs font-semibold text-gold-400">Strategic & Economic Impact:</div>
+                            <div class="text-xs text-slate-400" x-text="geo.impact"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: SUPERPOWER ENGINE -->
+        <section x-show="activeTab === 'military'" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+            <div class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-crimson-600">Military & Economic Hegemony</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Superpower Engine & Atomic Arsenal</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-3xl">
+                    Unmatched military manpower, global carrier strike forces, nuclear triad dominance, and economic innovation centered in Silicon Valley and Wall Street.
+                </p>
+            </div>
+
+            <!-- Defense Arsenal Metrics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-t-crimson-600 space-y-2">
+                    <div class="text-xs text-slate-400 font-bold uppercase">Nuclear Triad</div>
+                    <div class="text-3xl font-black text-white">5,200+</div>
+                    <div class="text-xs text-slate-300">Warheads across ICBMs (Minuteman III), SSBN Submarines, & Stealth Bombers (B-2, B-21 Raider).</div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-t-gold-500 space-y-2">
+                    <div class="text-xs text-slate-400 font-bold uppercase">Carrier Strike Groups</div>
+                    <div class="text-3xl font-black text-white">11 Supercarriers</div>
+                    <div class="text-xs text-slate-300">Nuclear-powered Gerald R. Ford & Nimitz class carriers projecting instant global force.</div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-t-blue-500 space-y-2">
+                    <div class="text-xs text-slate-400 font-bold uppercase">Active Manpower</div>
+                    <div class="text-3xl font-black text-white">2.1M Total</div>
+                    <div class="text-xs text-slate-300">1.3M active duty troops + 800K reserves backed by high-tech defense infrastructure.</div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-t-purple-500 space-y-2">
+                    <div class="text-xs text-slate-400 font-bold uppercase">Defense Tech Leader</div>
+                    <div class="text-3xl font-black text-white">$840B+</div>
+                    <div class="text-xs text-slate-300">Annual defense budget fueling stealth technology, satellite systems, and AI warfare.</div>
+                </div>
+            </div>
+
+            <!-- Tech & Economic Pillars -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <h3 class="text-xl font-bold text-gold-400 flex items-center space-x-2">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                        <span>Silicon Valley & High-Tech Monopoly</span>
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Home to global technological giants (Apple, Microsoft, Google, Nvidia, OpenAI). America leads artificial intelligence, semiconductor design, space exploration (SpaceX, NASA), and quantum computing research.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <h3 class="text-xl font-bold text-gold-400 flex items-center space-x-2">
+                        <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        <span>Wall Street & Dollar Hegemony</span>
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        The U.S. Dollar serves as the global reserve currency. Wall Street (NYSE & NASDAQ) commands over 40% of the world's total equity market capitalization, giving America unmatched financial leverage.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: GLOBAL INTERFERENCE & STAND AGAINST DICTATORS -->
+        <section x-show="activeTab === 'wars'" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+            <div class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-crimson-600">Global Operations & Anti-Authoritarian Interventions</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Standing Against Dictators & Tyranny</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-3xl">
+                    America's historical role as the Sentinel of Freedom—from defeating fascism in WWII to confronting dictators in the Middle East and maintaining order worldwide.
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <template x-for="conflict in conflicts" :key="conflict.title">
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-crimson-600 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <h3 class="text-xl font-bold text-white" x-text="conflict.title"></h3>
+                            <span class="px-3 py-1 bg-crimson-600/20 text-crimson-400 border border-crimson-500/30 rounded-full text-xs font-bold w-fit" x-text="conflict.era"></span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed" x-text="conflict.desc"></p>
+                        <div class="bg-navy-950/80 p-3 rounded-lg border border-slate-800 text-xs text-slate-400">
+                            <strong class="text-gold-400">Target Regime / Enemy:</strong> <span x-text="conflict.target"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: TOP 100 U.S. DIPLOMATS -->
+        <section x-show="activeTab === 'diplomats'" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+            <div class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-gold-500">Statesmen & Peacekeepers</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Top 100 American Diplomats & Leaders</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-3xl">
+                    The architects of American foreign policy, peace treaties, alliances, and global stability from the founding era through modern Democratic administrations.
+                </p>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel p-4 rounded-xl border border-slate-800">
+                <div class="relative w-full md:w-96">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        x-model="searchQuery" 
+                        placeholder="Search diplomat name, role, or legacy..." 
+                        class="w-full bg-navy-950 border border-slate-700 text-xs text-white pl-9 pr-4 py-2.5 rounded-lg focus:outline-none focus:border-gold-500 transition">
+                </div>
+
+                <div class="flex items-center space-x-2 text-xs text-slate-400 w-full md:w-auto justify-end">
+                    <span>Showing:</span>
+                    <span class="font-bold text-gold-400" x-text="filteredDiplomats.length"></span>
+                    <span>of 100 Statesmen</span>
+                </div>
+            </div>
+
+            <!-- Diplomats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="diplomat in filteredDiplomats" :key="diplomat.id">
+                    <div class="glass-panel p-5 rounded-xl space-y-3 hover:border-gold-500/40 transition flex flex-col justify-between group">
+                        <div class="space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="text-xs font-black text-slate-500" x-text="'#' + diplomat.id"></span>
+                                <span class="px-2 py-0.5 bg-gold-500/10 text-gold-400 border border-gold-500/20 text-[10px] font-semibold rounded" x-text="diplomat.role"></span>
+                            </div>
+                            <h3 class="text-base font-bold text-white group-hover:text-gold-400 transition" x-text="diplomat.name"></h3>
+                            <p class="text-xs text-slate-300 leading-relaxed" x-text="diplomat.impact"></p>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800/80 flex justify-between items-center text-[11px] text-slate-400">
+                            <span>Key Era / Focus:</span>
+                            <span class="font-semibold text-slate-200" x-text="diplomat.era"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-slate-800 mt-20 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <p class="text-xs text-slate-400 font-light">
+                "America is the land of Democrats. Free from conflicts, built on liberty, governed by peace and strength."
+            </p>
+            <div class="text-[11px] text-slate-500">
+                &copy; No Promised Land Archive | United States Heritage & Geopolitics Platform
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine App Logic & Data Script -->
+    <script>
+        function appData() {
+            return {
+                activeTab: 'hero',
+                mobileMenuOpen: false,
+                presidentFilter: 'all',
+                searchQuery: '',
+
+                tabs: [
+                    { id: 'hero', name: 'Home & Creed', icon: 'flag' },
+                    { id: 'history', name: '250 Years Liberty', icon: 'landmark' },
+                    { id: 'geography', name: 'Seas & Rivers', icon: 'compass' },
+                    { id: 'military', name: 'Atomic & Military', icon: 'shield' },
+                    { id: 'wars', name: 'Anti-Dictator History', icon: 'swords' },
+                    { id: 'diplomats', name: 'Top 100 Diplomats', icon: 'users' }
+                ],
+
+                timelineEras: [
+                    { year: '1619 - 1776', title: 'Arrival & Colonial Resistance', desc: 'First enslaved Africans arrive in Jamestown; 250 years of slavery begins alongside the growing resistance against British imperial tyranny.', impact: 'Declaration of Independence' },
+                    { year: '1776 - 1865', title: '250 Years Slavery & Civil War', desc: 'The terrible legacy of slavery tears the nation, leading to the bloody Civil War where Abraham Lincoln enforces the Emancipation Proclamation.', impact: 'Union Preserved & Slavery Abolished' },
+                    { year: '1930s - 1945', title: 'FDR & Defeating World Fascism', desc: 'Franklin D. Roosevelt establishes the New Deal and leads the Allies to destroy Nazi & imperial tyranny, establishing the United Nations.', impact: 'Global Hegemony Established' },
+                    { year: '1950s - 1960s', title: 'Civil Rights Movement', desc: 'Martin Luther King Jr. and Democratic legislation (Civil Rights Act of 1964) break down Jim Crow laws, securing constitutional equality.', impact: 'Legal Integration & Equal Rights' },
+                    { year: '2008 - Present', title: 'Barack Obama & Modern Era', desc: 'Election of Barack Obama marks a pivotal democratic milestone; modern era focuses on high-tech supremacy, renewable transitions, and global diplomacy.', impact: 'Inclusive Democratic Leadership' }
+                ],
+
+                presidents: [
+                    { num: '44th President', name: 'Barack Obama', party: 'Democrat', legacy: 'Transformational modern Democratic leader. Universal health care expansion, bin Laden elimination, Paris Climate Accord, Iran Nuclear Deal.', achievement: 'Affordable Care Act & World Diplomacy' },
+                    { num: '16th President', name: 'Abraham Lincoln', party: 'Republican', legacy: 'Preserved the Union through the brutal Civil War and issued the Emancipation Proclamation ending 250 years of legal slavery.', achievement: 'Emancipation Proclamation & 13th Amendment' },
+                    { num: '32nd President', name: 'Franklin D. Roosevelt', party: 'Democrat', legacy: 'Led America through the Great Depression with the New Deal and won WWII against fascist dictatorships.', achievement: 'New Deal & United Nations Founding' },
+                    { num: '35th President', name: 'John F. Kennedy', party: 'Democrat', legacy: 'Navigated the Cuban Missile Crisis, launched the Apollo Space Program, and inspired Civil Rights legislation.', achievement: 'Defused Nuclear Crisis & Space Race' },
+                    { num: '46th President', name: 'Joe Biden', party: 'Democrat', legacy: 'Passed landmark bipartisan infrastructure legislation, CHIPS & Science Act, and rallied global support against authoritarian aggression.', achievement: 'CHIPS Act & NATO Expansion' },
+                    { num: '36th President', name: 'Lyndon B. Johnson', party: 'Democrat', legacy: 'Signed the landmark Civil Rights Act of 1964 and Voting Rights Act of 1965, creating the Great Society.', achievement: 'Civil Rights Act & Voting Rights Act' }
+                ],
+
+                geographyItems: [
+                    { title: 'Atlantic & Pacific Moats', category: 'Oceanic Protection', icon: 'waves', desc: 'Thousands of miles of ocean buffer America from foreign land invasion, allowing projection of power without immediate territorial threats.', impact: 'Inviolable continental defense.' },
+                    { title: 'Mississippi River Basin System', category: 'Navigable Waterways', icon: 'git-commit', desc: 'More navigable inland waterways than the rest of the world combined, linking America’s agricultural heartland directly to ocean transport.', impact: 'Unbeatable low-cost internal trade.' },
+                    { title: 'The Great Lakes System', category: 'Freshwater & Industrial Core', icon: 'droplet', desc: 'Holds 21% of world surface freshwater, powering manufacturing, shipping, and agriculture across major northern states.', impact: 'Industrial superpower engine.' },
+                    { title: 'Gulf of Mexico & Maritime Ports', category: 'Energy & Shipping Hub', icon: 'anchor', desc: 'Strategic gateway for oil refineries, international shipping lanes, and connection to South America and the Caribbean.', impact: 'Global trade gateway.' }
+                ],
+
+                conflicts: [
+                    { title: 'World War II & Defeating Axis Dictators', era: '1941 - 1945', target: 'Hitler (Nazi Germany), Mussolini (Italy), Imperial Japan', desc: 'Mobilized total industrial power, deployed millions of troops across Europe and the Pacific, and deployed atomic force to dismantle fascist tyranny.' },
+                    { title: 'Operation Desert Storm & Gulf War', era: '1990 - 1991', target: 'Saddam Hussein (Ba\'athist Iraq)', desc: 'Assembled a 35-nation coalition to liberate Kuwait, displaying overwhelming air and armored military superiority.' },
+                    { title: 'Global War on Terror & Neutralizing Dictatorial Terror', era: '2001 - Present', target: 'Al-Qaeda, ISIS, Taliban', desc: 'Special forces and drone warfare precision that eliminated Osama bin Laden under Barack Obama and systematically destroyed ISIS caliphate command.' },
+                    { title: 'Operation Iraqi Freedom & Ousting Ba\'athist Regime', era: '2003 - 2011', target: 'Saddam Hussein Regime', desc: 'Toppled one of the Middle East\'s most brutal dictators, establishing constitutional electoral mechanics.' }
+                ],
+
+                diplomatsRaw: [
+                    "Madeleine Albright", "Colin Powell", "Hillary Clinton", "Antony Blinken", "John Kerry", "George Marshall", "Henry Kissinger", 
+                    "Richard Holbrooke", "Averell Harriman", "George Kennan", "Susan Rice", "William J. Burns", "Ralph Bunche", "Samantha Power", 
+                    "James Baker", "George Shultz", "Cyrus Vance", "Zbigniew Brzezinski", "Condoleezza Rice", "Warren Christopher", 
+                    "Dean Acheson", "Cordell Hull", "Benjamin Franklin", "Thomas Jefferson", "John Quincy Adams", "Sumner Welles", 
+                    "Chester Bowles", "Paul Nitze", "Clark Clifford", "McGeorge Bundy", "W. Anthony Lake", "Nicholas Burns", "Wendy Sherman", 
+                    "Thomas R. Pickering", "Ryan Crocker", "Christopher Hill", "Dennis Ross", "Ellsworth Bunker", "Llewellyn Thompson", 
+                    "Charles E. Bohlen", "George Ball", "Sol Linowitz", "Philip Habib", "Frank Wisner", "John Negroponte", "Kurt Campbell", 
+                    "Jon Huntsman Jr.", "Caroline Kennedy", "William Taylor", "Marie Yovanovitch", "John Sullivan", "Victoria Nuland", 
+                    "Linda Thomas-Greenfield", "Jake Sullivan", "Brett McGurk", "Daniel Russel", "Roberta Jacobson", "Jeffrey Feltman", 
+                    "Anne-Marie Slaughter", "Strobe Talbott", "Robert Gates", "Michael McFaul", "Ambassador Stevens", "William H. Luers", 
+                    "Morton Abramowitz", "April Glaspie", "Zalmay Khalilzad", "Richard Armitage", "Robert Zoellick", "John Bolton", 
+                    "Elliott Abrams", "Stuart Eizenstat", "Nicholas Platt", "Frank Carlucci", "Arthur Goldberg", "Adlai Stevenson II", 
+                    "Jeane Kirkpatrick", "Daniel Patrick Moynihan", "Andrew Young", "Henry Cabot Lodge Jr.", "Warren Austin", 
+                    "Edward Stettinius Jr.", "Walter Walter", "Shirley Temple Black", "Clare Boothe Luce", "Joseph Kennedy Sr.", 
+                    "Walter Page", "Elihu Root", "John Hay", "Charles Evans Hughes", "Frank B. Kellogg", "Henry L. Stimson", 
+                    "Robert Lansing", "William Jennings Bryan", "John Sherman", "Hamilton Fish", "William H. Seward", "Daniel Webster"
+                ],
+
+                get filteredPresidents() {
+                    if (this.presidentFilter === 'all') return this.presidents;
+                    return this.presidents.filter(p => p.party === this.presidentFilter);
+                },
+
+                get filteredDiplomats() {
+                    const query = this.searchQuery.toLowerCase();
+                    return this.diplomatsList.filter(d => 
+                        d.name.toLowerCase().includes(query) || 
+                        d.role.toLowerCase().includes(query) || 
+                        d.impact.toLowerCase().includes(query) ||
+                        d.era.toLowerCase().includes(query)
+                    );
+                },
+
+                diplomatsList: []
+            }
+        }
+
+        // Generate full 100 Diplomats Database on Init
+        document.addEventListener('alpine:init', () => {
+            const rawNames = [
+                "Madeleine Albright", "Colin Powell", "Hillary Clinton", "Antony Blinken", "John Kerry", "George Marshall", "Henry Kissinger", 
+                "Richard Holbrooke", "Averell Harriman", "George Kennan", "Susan Rice", "William J. Burns", "Ralph Bunche", "Samantha Power", 
+                "James Baker", "George Shultz", "Cyrus Vance", "Zbigniew Brzezinski", "Condoleezza Rice", "Warren Christopher", 
+                "Dean Acheson", "Cordell Hull", "Benjamin Franklin", "Thomas Jefferson", "John Quincy Adams", "Sumner Welles", 
+                "Chester Bowles", "Paul Nitze", "Clark Clifford", "McGeorge Bundy", "W. Anthony Lake", "Nicholas Burns", "Wendy Sherman", 
+                "Thomas R. Pickering", "Ryan Crocker", "Christopher Hill", "Dennis Ross", "Ellsworth Bunker", "Llewellyn Thompson", 
+                "Charles E. Bohlen", "George Ball", "Sol Linowitz", "Philip Habib", "Frank Wisner", "John Negroponte", "Kurt Campbell", 
+                "Jon Huntsman Jr.", "Caroline Kennedy", "William Taylor", "Marie Yovanovitch", "John Sullivan", "Victoria Nuland", 
+                "Linda Thomas-Greenfield", "Jake Sullivan", "Brett McGurk", "Daniel Russel", "Roberta Jacobson", "Jeffrey Feltman", 
+                "Anne-Marie Slaughter", "Strobe Talbott", "Robert Gates", "Michael McFaul", "Ambassador Chris Stevens", "William H. Luers", 
+                "Morton Abramowitz", "April Glaspie", "Zalmay Khalilzad", "Richard Armitage", "Robert Zoellick", "John Bolton", 
+                "Elliott Abrams", "Stuart Eizenstat", "Nicholas Platt", "Frank Carlucci", "Arthur Goldberg", "Adlai Stevenson II", 
+                "Jeane Kirkpatrick", "Daniel Patrick Moynihan", "Andrew Young", "Henry Cabot Lodge Jr.", "Warren Austin", 
+                "Edward Stettinius Jr.", "Shirley Temple Black", "Clare Boothe Luce", "Joseph Kennedy Sr.", "Elihu Root", 
+                "John Hay", "Charles Evans Hughes", "Frank B. Kellogg", "Henry L. Stimson", "Robert Lansing", "William Jennings Bryan", 
+                "John Sherman", "Hamilton Fish", "William H. Seward", "Daniel Webster", "James Monroe", "Albert Gallatin", "Gouverneur Morris", "Silas Deane"
+            ];
+
+            const roles = ["Secretary of State", "UN Ambassador", "National Security Advisor", "Special Envoy", "Ambassador & Negotiator"];
+            const eras = ["Modern Democratic Era", "Post-Cold War", "Cold War Era", "WWII & Bretton Woods", "Founding Era"];
+
+            const list = rawNames.map((name, index) => {
+                return {
+                    id: index + 1,
+                    name: name,
+                    role: roles[index % roles.length],
+                    era: eras[index % eras.length],
+                    impact: `Instrumental American diplomat who shaped international law, brokered peace treaties, defended democratic values, and expanded global security alliances.`
+                }
+            });
+
+            // Specific highlights for major key diplomats
+            list[0].impact = "First female Secretary of State; key architect of NATO expansion and Balkan peacekeeping.";
+            list[1].impact = "First African-American Secretary of State; led diplomatic coalition strategy and defense initiatives.";
+            list[2].impact = "Championed human rights, global women's empowerment, and led pivot to Asia foreign policy.";
+            list[3].impact = "Modern Secretary of State leading transatlantic unity, NATO alliance defense, and Indo-Pacific strategy.";
+            list[4].impact = "Brokered the historic Iran Nuclear Deal (JCPOA) and led climate diplomacy for the Obama Administration.";
+            list[5].impact = "Crafted the Marshall Plan which rebuilt Western Europe after WWII and established NATO.";
+
+            window.Alpine.store('appStore', { diplomats: list });
+        });
+
+        // Initialize Alpine store items into appData component
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const app = document.querySelector('[x-data]')._x_dataStack[0];
+                if (app && window.Alpine.store('appStore')) {
+                    app.diplomatsList = window.Alpine.store('appStore').diplomats;
+                }
+                lucide.createIcons();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
